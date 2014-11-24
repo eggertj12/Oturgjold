@@ -38,40 +38,23 @@ Currently this has been tested with Android Studio 0.9.3.
 ### Importing
 Import the project into Android Studio by selecting 'Import Project' and selecting the project's `build.gradle`. When prompted, you can just pick the default gradle wrapper.
 
-### REQUIRED: Tweaking the Module Dependency Order (i.e. Classpath)
-For both IntelliJ IDEA and Android Studio, you will also need to change the classpath order for you dependencies. Otherwise you will see the dreaded `Stub!` exception:
-```
-    !!! JUnit version 3.8 or later expected:
-    java.lang.RuntimeException: Stub!
-      at junit.runner.BaseTestRunner.<init>(BaseTestRunner.java:5)
-      at junit.textui.TestRunner.<init>(TestRunner.java:54)
-      at junit.textui.TestRunner.<init>(TestRunner.java:48)
-      at junit.textui.TestRunner.<init>(TestRunner.java:41)
-```
-* For Intellij, go to Project Structure -> Modules -> deckard-gradle pane. In the Dependencies tab, move the Module SDK dependency (i.e. Android API 19 Platform) to be the last item in the list.
-* For Android Studio, dependency ordering is currently not modifiable via any GUI. Therefore, you must modify the project iml file directly as such and reload the project:
-    
-```
-    	    	<orderEntry type="library" exported="" scope="TEST" name="wagon-provider-api-1.0-beta-6" level="project" />
-    	    	<orderEntry type="library" exported="" scope="TEST" name="xercesMinimal-1.9.6.2" level="project" />
-    	    	<orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />			    		<---make sure this is the last orderEntry
-    		</component>
-    	</module>
-```
-    
-NOTE: Android Studio aggressively re-writes your dependencies list (your .iml file) and subverts the technique used above to get the Android SDK to the bottom of the classpath. You will get the dreaded Stub! exception every time you re-open the project (and possibly more often).  For this reason we currently recommend IntelliJ; we hope this can be solved in the future.
-
-### IntelliJ Extra Step
-Gradle is now in charge of compilation, but IntelliJ still launches the test runner. So in order for IntelliJ to know where to find compiled classes, you have to tell it. This manual step will hopefully go away soon, but for now it's necessary:
-
-1. Go to Project Structure -> Modules -> deckard-gradle -> Paths.
-2. The value for 'Output path' should be filled in, but 'Test output path' will not be. Copy the text that's in 'Output path', paste into 'Test output path', but change the final 'build/intermediates/classes/debug' to 'build/test-classes'. This is because the gradle android test plugin currently dumps all compiled test output (for all variants) into the same directory. This means that currently variants are not fully supported.
-
-### Android Studio Extra Setup
-The above trick doesn't work for Android Studio, since that part of the module configuration GUI has been ripped out of the IDE. According to [this thread on the Robolectric google group](https://groups.google.com/forum/#!topic/robolectric/xsOpEwtdTi4), some people have managed to get Android Studio to find the classes compiled by gradle.
-
 ### Running the Robolectric Test
+1. Go to your **Run/Debug configurations screen**. Click the **'app'** drop down and select **Edit Configurations...**
+1. Add a new Gradle configuration.  Click on the + and select **Gradle**
+1. Call this configuration 'Build test classes'
+1. In the section titled **Gradle project:** select the build.gradle in your robolectric-tests subdirectory
+1. Set **Tasks:** to testClasses
+1. Click 'Apply'
+1. Add a new JUnit configuration
+1. Make the Gradle configuration a dependency of this configuration.  Under **Before launch: Make** click the + sign, 'Run Another Configuration' and choose 'Build test classes'
+1.  Name this configuration 'Run Robolectric Tests'
+1. Change **Test kind:** to 'All in package'
+1. Change **Search for tests:** to 'In single module'
+1. Change **Use classpath of module:** to 'robolectric-tests'
+1. Click 'Apply'
+1. Click 'Ok'
+
 You should now be able to `DeckardActivityRobolectricTest`. Run it as a normal JUnit test - make sure to choose the JUnit test runner and not the Android one.
  
 ### Running the Espresso Test
-To run the Espresso test, you need to set up a Run Configuration. Go to `Edit Configurations -> Defaults -> Android Tests` and, after choosing  the correct module (deckard-gradle), fill in the `Specific instrumentation test runner` field. The easiest way is to click the ellipsis button on the right and type in `GITR`. This will find `GoogleInstrumentationTestRunner`, which is what you want. The fully-qualified class name will appear. Now you can right click on the test method in `DeckardEspressoTest` and choose the Android test runner.
+To run the Espresso test, you need to set up a Run Configuration. Go to `Edit Configurations -> Defaults -> Android Tests` and, after choosing  the correct module (app), fill in the `Specific instrumentation test runner` field. The easiest way is to click the ellipsis button on the right and type in `GITR`. This will find `GoogleInstrumentationTestRunner`, which is what you want. The fully-qualified class name will appear. Now you can right click on the test method in `DeckardEspressoTest` and choose the Android test runner.
