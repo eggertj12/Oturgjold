@@ -1,9 +1,10 @@
-# Deckard (for Gradle)
-[![Build Status](https://secure.travis-ci.org/robolectric/deckard-gradle.png?branch=master)](http://travis-ci.org/robolectric/deckard-gradle)
+# Modified Deckard (for Gradle)
 
 Deckard is the simplest possible Android project that uses Robolectric for testing and Gradle to build. It has one Activity, a single Robolectric test of that Activity, and an Espresso test of that Activity.
 
-With just a bit of manual intervention, Deckard also imports into IntelliJ and Android Studio, due to their support for gradle. See below for instructions.
+I took Deckard which many people are familiar with and modified it to demonstrate the ideas expressed in https://engineering.aweber.com/avoiding-robolectric-shock-while-testing-android-with-gradle-and-espresso/
+
+With just a bit of manual intervention, this project also imports into Android Studio. See below for instructions.
 
 ## Setup
 
@@ -11,18 +12,13 @@ With just a bit of manual intervention, Deckard also imports into IntelliJ and A
 
 To start a new Android project:
 
-1. Install the [Android SDK](http://developer.android.com/sdk/index.html). On Mac OS X with [Homebrew](http://brew.sh/) just run `brew install android-sdk`
+1. Install the [Android SDK](http://developer.android.com/sdk/index.html).
 
-2. Set your `ANDROID_HOME` environment variable to `/usr/local/opt/android-sdk`.
+2. Set your `ANDROID_HOME` environment variable appropriately.
 
 3. Run the Android SDK GUI and install API 18 and any other APIs you might need. You can start the GUI by invoking `android`
 
-4. Download Deckard from GitHub:
-    ```bash
-    wget https://github.com/robolectric/deckard-gradle/archive/master.zip
-    unzip master.zip
-    mv deckard-master my-new-project
-    ```
+4. Download this project from GitHub.
 
 5. In the project directory you should be able to run the Robolectric tests:
     ```bash
@@ -37,10 +33,10 @@ To start a new Android project:
 ## IntelliJ / Android Studio Support
 
 ### Compatibility
-Currently we believe only IntelliJ EAP build 135.666 or later and Android Studio 0.5.0 or later will work with the tooling that deckard-gradle depends on.
+Currently this has been tested with Android Studio 0.9.3.
 
 ### Importing
-Import the project into IntelliJ or Android Studio by selecting 'Import Project' and selecting the project's `build.gradle`. When prompted, you can just pick the default gradle wrapper.
+Import the project into Android Studio by selecting 'Import Project' and selecting the project's `build.gradle`. When prompted, you can just pick the default gradle wrapper.
 
 ### REQUIRED: Tweaking the Module Dependency Order (i.e. Classpath)
 For both IntelliJ IDEA and Android Studio, you will also need to change the classpath order for you dependencies. Otherwise you will see the dreaded `Stub!` exception:
