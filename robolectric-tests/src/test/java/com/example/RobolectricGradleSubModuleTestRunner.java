@@ -19,11 +19,11 @@ public class RobolectricGradleSubModuleTestRunner extends RobolectricTestRunner 
     }
 
     protected String getAndroidManifestPath() {
-        return "../deckard-gradle/app/src/main/AndroidManifest.xml";
+        return "../app/src/main/AndroidManifest.xml";
     }
 
     protected String getResPath() {
-        return "../deckard-gradle/app/src/main/res";
+        return "../app/src/main/res";
     }
 
     @Override
